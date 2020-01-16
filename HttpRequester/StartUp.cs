@@ -12,7 +12,7 @@ namespace HttpRequester
         static async Task Main(string[] args)
         {
             const string NewLine = "\r\n";
-            TcpListener tcpListener = new TcpListener(IPAddress.Loopback, 1234);
+            TcpListener tcpListener = new TcpListener(IPAddress.Loopback, 80);
             tcpListener.Start();
             while (true)
             {
@@ -21,11 +21,18 @@ namespace HttpRequester
                 byte[] requestBytes = new byte[1000000];
                 int bytesRead = networkStream.Read(requestBytes, 0, requestBytes.Length);
                 string request = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
-                string responseText = "<h1>Hello Header</h1>";
+                string responseText = @"<form action='/Account/Login' method='post'>
+                                        <input type=date name='date' />
+                                        <input type=text name='username' />
+                                        <input type=password name='password' />
+                                        <input type=submit value='Login' />
+                                        </form>";
                 string response = "HTTP/1.0 200 OK" + NewLine +
                                   "Server: SoftUniServer/1.0" + NewLine +
                                   "Content-Type: text/html" + NewLine +
-                                  "Content-Length: 21" + NewLine +
+                                  // "Location: https://google.com" + NewLine +
+                                  // "Content-Disposition: attachment; filename=test.html" + NewLine +
+                                  "Content-Length: " + responseText.Length + NewLine +
                                   NewLine +
                                   responseText;
 
